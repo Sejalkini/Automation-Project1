@@ -1,0 +1,95 @@
+package HelathCare_site;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class Login {
+
+	public static void main(String[] args) throws SQLException, Exception {
+		
+		//Database Connection
+		Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/sejaldb","root", "root");
+		Statement stmt=con.createStatement();
+		ResultSet rs=stmt.executeQuery("Select * from HealthCaresite");
+		while(rs.next()==true)
+		{
+			String id=rs.getString("Username");
+			String pd=rs.getString("Password");
+				
+		//Webdriver	
+		System.setProperty("webdriver.chrome.driver", "D:\\Testing\\chromedriver.exe");	
+		WebDriver driver=new ChromeDriver();
+		driver.get("https://katalon-demo-cura.herokuapp.com/");
+		
+		//click on appointment button
+		driver.findElement(By.linkText("Make Appointment")).click();
+		
+		//fill the login details
+		driver.findElement(By.xpath("//input[@id='txt-username']")).sendKeys(id);
+		driver.findElement(By.xpath("//input[@id='txt-password']")).sendKeys(pd);
+		
+		Thread.sleep(2000);
+		
+		//click on login button
+		driver.findElement(By.xpath("//button[@id='btn-login']")).click();
+		
+		//Dropdown Box
+		Select S1=new Select(driver.findElement(By.id("combo_facility")));
+		Thread.sleep(2000);
+		S1.selectByValue("Seoul CURA Healthcare Center");
+		
+		//CheckBox
+		driver.findElement(By.xpath("//input[@id='chk_hospotal_readmission']")).click();
+		
+		
+		//Radio Button
+		WebElement radio1 = driver.findElement(By.xpath("//input[@id='radio_program_medicaid']"));
+         radio1.click();
+		
+		//calendar
+         driver.findElement(By.id("txt_visit_date")).click();
+         WebElement arrow=driver.findElement(By.xpath("//body[1]/div[1]/div[1]/table[1]/thead[1]/tr[2]/th[3]"));
+         arrow.click();
+         Thread.sleep(2000);
+         WebElement date=driver.findElement(By.xpath("//td[contains(text(),'14')]"));
+         date.click();
+         
+         //Comment box
+         driver.findElement(By.name("comment")).sendKeys("Book Appointment");
+         
+         //click on Book Appointment
+         driver.findElement(By.xpath("//button[@id='btn-book-appointment']")).click();
+         
+         //click on option button
+         driver.findElement(By.xpath("//body/a[@id='menu-toggle']/i[1]")).click();
+         Thread.sleep(2000);
+         
+         //click on history
+         driver.findElement(By.linkText("History")).click();
+         Thread.sleep(2000);
+         
+         //click on Profile
+         driver.findElement(By.xpath("//body/a[@id='menu-toggle']/i[1]")).click();
+         driver.findElement(By.linkText("Profile")).click();
+         Thread.sleep(2000); 
+         
+         //click on logout
+         driver.findElement(By.linkText("Logout")).click();
+         
+		
+		}
+	}
+
+}
+
+
+
