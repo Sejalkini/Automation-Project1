@@ -1,0 +1,117 @@
+package UsingTestNg;
+
+import org.testng.annotations.Test;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.BeforeTest;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+@Test(priority = 0)
+public class CuraHealthcareTest {
+	WebDriver driver;
+	
+	public void title() {
+		String ActualTitle=driver.getTitle();
+		String ExpectedTitle="CURA Healthcare Service";
+		Assert.assertEquals(ActualTitle, ExpectedTitle);
+	
+	}
+	
+	@Test
+	public void email() {
+		
+		
+	}
+	
+  @Test  (dataProvider = "dp" ,priority=1)  
+  public void login(String n,String s) throws Exception {
+	  
+	  driver.findElement(By.name("username")).sendKeys(n);
+	  driver.findElement(By.name("password")).sendKeys(s);
+	  Thread.sleep(2000);
+	  driver.findElement(By.xpath("//button[@id='btn-login']")).click();
+  }
+  
+  @Test (priority=2)
+  public void appointment() throws Exception {
+  
+	  //Dropdown Box
+	  Select S1=new Select(driver.findElement(By.id("combo_facility")));
+	  Thread.sleep(2000);
+	  S1.selectByValue("Seoul CURA Healthcare Center");
+			
+	  //CheckBox
+	  driver.findElement(By.xpath("//input[@id='chk_hospotal_readmission']")).click();
+			
+			
+	  //Radio Button
+	  WebElement radio1 = driver.findElement(By.xpath("//input[@id='radio_program_medicaid']"));
+	  radio1.click();
+			
+	  //calendar
+	  driver.findElement(By.id("txt_visit_date")).click();
+	  WebElement arrow=driver.findElement(By.xpath("//body[1]/div[1]/div[1]/table[1]/thead[1]/tr[2]/th[3]"));
+	  arrow.click();
+	  Thread.sleep(2000);
+	  WebElement date=driver.findElement(By.xpath("//td[contains(text(),'14')]"));
+	  date.click();
+	         
+	  //Comment box
+	  driver.findElement(By.name("comment")).sendKeys("Book Appointment");
+	         
+	  //click on Book Appointment
+	  driver.findElement(By.xpath("//button[@id='btn-book-appointment']")).click();
+  			}
+	        
+   @Test (priority=3)
+   public void option() throws Exception {
+	        	 
+	  //click on option button
+      driver.findElement(By.xpath("//body/a[@id='menu-toggle']/i[1]")).click();
+      Thread.sleep(2000);
+      
+      //click on history
+      driver.findElement(By.linkText("History")).click();
+      Thread.sleep(2000);
+      
+      //click on Profile
+      driver.findElement(By.xpath("//body/a[@id='menu-toggle']/i[1]")).click();
+      driver.findElement(By.linkText("Profile")).click();
+      Thread.sleep(2000); 
+	         }
+
+  @DataProvider
+      public Object[][] dp() {
+      Object[][]data = new Object[2][2]; {
+      data[0][0] ="John Dsuza";
+      data[0][1]="ThisIsAPassword";  	  
+      data[1][0] ="John Doe";
+      data[1][1]="ThisIsNotAPassword";
+      
+      return data;
+    }
+  }
+  @BeforeTest
+  public void beforeTest() {
+	  System.setProperty("webdriver.chrome.driver", "D:\\\\Testing\\\\chromedriver.exe");
+	  driver=new ChromeDriver();
+	  driver.manage().window().maximize();
+	  driver.get("https://katalon-demo-cura.herokuapp.com/");
+	  driver.findElement(By.id("btn-make-appointment")).click();
+	  
+  
+  
+  }
+
+  @AfterTest
+  public void afterTest() {
+	//click on logout
+      driver.findElement(By.linkText("Logout")).click();
+      
+  }
+
+}
