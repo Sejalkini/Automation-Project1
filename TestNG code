@@ -21,11 +21,6 @@ public class CuraHealthcareTest {
 	
 	}
 	
-	@Test
-	public void email() {
-		
-		
-	}
 	
   @Test  (dataProvider = "dp" ,priority=1)  
   public void login(String n,String s) throws Exception {
